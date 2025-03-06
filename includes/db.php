@@ -405,3 +405,27 @@ function registerNewClient($clientData) {
 
     return false;
 }
+
+/**
+ * Connecte le client s'il a entré le bon nom d'utilisateur et mot de passe
+ *
+ * @param string $username Nom d'utilisateur
+ * @param string $password Mot de passe
+ * @return bool True si la connexion est réussie, False sinon
+ */
+function loginUser($username, $password) {
+    // Vérifier les informations de connexion de l'utilisateur
+    $user = verifyUserCredentials($username, $password);
+
+    if ($user) {
+        // Démarrer une session
+        session_start();
+
+        // Stocker les informations de l'utilisateur dans la session
+        $_SESSION['user'] = $user;
+
+        return true;
+    }
+
+    return false;
+}
