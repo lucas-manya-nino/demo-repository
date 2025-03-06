@@ -1,0 +1,126 @@
+/* Styles généraux */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+/* En-tête */
+header {
+    margin-bottom: 2rem;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Pied de page */
+footer {
+    margin-top: 3rem;
+}
+
+/* Cartes des propriétés */
+.property-card {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    height: 100%;
+}
+
+.property-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.property-image {
+    height: 200px;
+    object-fit: cover;
+}
+
+.property-price {
+    font-weight: bold;
+    color: #0d6efd;
+}
+
+.property-features {
+    font-size: 0.9rem;
+}
+
+.property-date {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+/* Page de détail */
+.property-detail-image {
+    max-height: 500px;
+    object-fit: cover;
+}
+
+.property-detail-info {
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    padding: 1.5rem;
+}
+
+.property-detail-features {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.property-detail-features li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.property-detail-features li:last-child {
+    border-bottom: none;
+}
+
+/* Formulaire de filtrage */
+.filter-form {
+    background-color: #f0f0f0;
+    padding: 1.5rem;
+    border-radius: 0.25rem;
+    margin-bottom: 2rem;
+}
+
+/* Formulaire d'ajout de propriété */
+.add-property-form label {
+    font-weight: 500;
+}
+
+.required::after {
+    content: " *";
+    color: #dc3545;
+}
+
+/* Page d'accueil */
+.hero-section {
+    background-color: #0d6efd;
+    color: white;
+    padding: 3rem 0;
+    margin-bottom: 3rem;
+    border-radius: 0.25rem;
+}
+
+.hero-section h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.feature-box {
+    text-align: center;
+    padding: 2rem;
+    border-radius: 0.25rem;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    height: 100%;
+}
+
+.feature-box i {
+    font-size: 2.5rem;
+    color: #0d6efd;
+    margin-bottom: 1rem;
+}
