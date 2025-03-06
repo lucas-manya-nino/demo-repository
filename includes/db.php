@@ -263,3 +263,21 @@ function filterProperties($filters) {
 
     return $properties;
 }
+
+
+function verifyUserCredentials($username, $password) {
+    // Hacher le mot de passe fourni
+    $hashedPassword = hash('sha256', $password);
+
+    // Requête SQL pour vérifier les informations de connexion
+    $sql = "SELECT * FROM clients WHERE clients.name = ? AND clients.password_hash = ?";
+    $result = executeQuery($sql, [$username, $hashedPassword]);
+
+    if ($row = $result->fetch_assoc()) {
+        // Retirer le mot de passe du tableau des résultats pour des raisons de sécurité
+        unset($row['password_hash']);
+        return $row;
+    }
+
+    return false;
+}
