@@ -264,19 +264,143 @@ function filterProperties($filters) {
     return $properties;
 }
 
-
+/**
+ * Vérifie les informations de connexion de l'utilisateur
+ *
+ * @param string $username Nom d'utilisateur
+ * @param string $password Mot de passe
+ * @return array|false Tableau des informations de l'utilisateur si correct, false sinon
+ */
 function verifyUserCredentials($username, $password) {
     // Hacher le mot de passe fourni
     $hashedPassword = hash('sha256', $password);
 
     // Requête SQL pour vérifier les informations de connexion
-    $sql = "SELECT * FROM clients WHERE clients.name = ? AND clients.password_hash = ?";
+    $sql = "SELECT * FROM clients WHERE username = ? AND password = ?";
     $result = executeQuery($sql, [$username, $hashedPassword]);
 
     if ($row = $result->fetch_assoc()) {
         // Retirer le mot de passe du tableau des résultats pour des raisons de sécurité
-        unset($row['password_hash']);
+        unset($row['password']);
         return $row;
+    }
+
+    return false;
+}
+
+/**
+ * Vérifie si un nom d'utilisateur est disponible
+ *
+ * @param string $username Nom d'utilisateur à vérifier
+ * @return bool True si le nom d'utilisateur est disponible, False sinon
+ */
+function verifyUsernameAvailable($username) {
+    // Requête SQL pour vérifier si le nom d'utilisateur existe déjà
+    $sql = "SELECT COUNT(*) as count FROM clients WHERE username = ?";
+    $result = executeQuery($sql, [$username]);
+
+    if ($row = $result->fetch_assoc()) {
+        return $row['count'] == 0;
+    }
+
+    return false;
+}
+
+/**
+ * Vérifie si une adresse email est disponible
+ *
+ * @param string $email Adresse email à vérifier
+ * @return bool True si l'adresse email est disponible, False sinon
+ */
+function verifyEmailAvailable($email) {
+    // Requête SQL pour vérifier si l'adresse email existe déjà
+    $sql = "SELECT COUNT(*) as count FROM clients WHERE email = ?";
+    $result = executeQuery($sql, [$email]);
+
+    if ($row = $result->fetch_assoc()) {
+        return $row['count'] == 0;
+    }
+
+    return false;
+}
+
+/**
+ * Vérifie si un numéro de téléphone est disponible
+ *
+ * @param string $phoneNum Numéro de téléphone à vérifier
+ * @return bool True si le numéro de téléphone est disponible, False sinon
+ */
+function verifyPhoneNumAvailable($phoneNum) {
+    // Requête SQL pour vérifier si le numéro de téléphone existe déjà
+    $sql = "SELECT COUNT(*) as count FROM clients WHERE phone_num = ?";
+    $result = executeQuery($sql, [$phoneNum]);
+
+    if ($row = $result->fetch_assoc()) {
+        return $row['count'] == 0;
+    }
+
+    return false;
+}
+
+/**
+ * Enregistre un nouveau client dans la base de données
+ *
+ * @param array $clientData Données du client
+ * @return int|false ID du nouveau client ou false en cas d'échec
+ */
+function registerNewClient($clientData) {
+    // Vérifier si le nom d'utilisateur est disponible
+    if (!verifyUsernameAvailable($clientData['username'])) {
+        return false;
+    }
+
+    // Vérifier si l'adresse email est disponible
+    if (!verifyEmailAvailable($clientData['email'])) {
+        return false;
+    }
+
+    // Vérifier si le numéro de téléphone est disponible
+    if (!verifyPhoneNumAvailable($clientData['phone_num'])) {
+        return false;
+    }
+
+    // Hacher le mot de passe
+    $clientData['password'] = hash('sha256', $clientData['password']);
+
+    // Ajouter la date d'enregistrement
+    $clientData['registration_date'] = date('Y-m-d');
+
+    // Créer la requête SQL d'insertion
+    $columns = implode(', ', array_keys($clientData));
+    $placeholders = implode(', ', array_fill(0, count($clientData), '?'));
+
+    $sql = "INSERT INTO clients ($columns) VALUES ($placeholders)";
+
+    $conn = getDbConnection();
+    $stmt = $conn->prepare($sql);
+
+    if (!$stmt) {
+        die('Erreur de préparation de la requête: ' . $conn->error);
+    }
+
+    // Construire les types de paramètres
+    $types = '';
+    foreach ($clientData as $param) {
+        if (is_int($param)) {
+            $types .= 'i';
+        } elseif (is_float($param)) {
+            $types .= 'd';
+        } else {
+            $types .= 's';
+        }
+    }
+
+    // Lier les paramètres
+    $stmt->bind_param($types, ...array_values($clientData));
+
+    // Exécuter la requête
+    if ($stmt->execute()) {
+        return $conn->insert_id;
     }
 
     return false;
