@@ -1,4 +1,5 @@
 <?php
+include 'includes/start.php';
 // Définir le titre de la page
 $pageTitle = "ImmoAgence - Toutes nos propriétés";
 
@@ -15,7 +16,7 @@ $filters = [
 $properties = filterProperties($filters);
 
 // Inclure l'en-tête
-include 'includes/start.php';
+
 ?>
 
     <div id="properties-app">

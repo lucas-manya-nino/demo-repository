@@ -1,4 +1,5 @@
 <?php
+include 'includes/start.php';
 // Récupérer l'ID de la propriété
 $propertyId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
@@ -23,7 +24,7 @@ if (!$property) {
 $pageTitle = "ImmoAgence - " . htmlspecialchars($property['title']);
 
 // Inclure l'en-tête
-include 'includes/start.php';
+
 ?>
 
     <div id="property-detail-app">

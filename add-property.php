@@ -2,6 +2,8 @@
 // Définir le titre de la page
 $pageTitle = "ImmoAgence - Déposer une annonce";
 
+include 'includes/start.php';
+
 // Variables pour le formulaire
 $errors = [];
 $success = false;
@@ -91,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // Inclure l'en-tête
-include 'includes/start.php';
+
 ?>
 
     <div id="add-property-app">

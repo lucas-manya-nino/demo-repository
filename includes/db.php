@@ -4,10 +4,10 @@
  */
 
 // Paramètres de connexion à la base de données
-const DB_HOST = 'sql313.infinityfree.com';
-const DB_USER = 'if0_38459457';
-const DB_PASS = 'dnUvhB9pGmSx';
-const DB_NAME = 'if0_38459457_immo';
+const DB_HOST = 'localhost';
+const DB_USER = 'root';
+const DB_PASS = '';
+const DB_NAME = 'real_estate';
 const DB_PORT = 3306;
 
 /**
