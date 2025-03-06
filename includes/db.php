@@ -429,3 +429,16 @@ function loginUser($username, $password) {
 
     return false;
 }
+
+/**
+ * Déconnecte le client en détruisant la session
+ */
+function logoutUser() {
+    session_start();
+    
+    // Supprimer toutes les variables de session
+    $_SESSION = [];
+
+    // Détruire la session
+    session_destroy();
+}
