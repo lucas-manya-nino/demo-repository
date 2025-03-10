@@ -10,7 +10,7 @@ $action = $_POST['action'] ?? '';
 $email = $_POST['email'] ?? '';
 $password = $_POST['password'] ?? '';
 $username = $_POST['username'] ?? '';
-$phone = $_POST['phone'] ?? '06-06-06-06-06';
+$phone = $_POST['phone_num'] ?? '06-06-06-06-06';
 
 if ($action === 'signup') {
     $userInfos = array(
@@ -23,7 +23,7 @@ if ($action === 'signup') {
         header("Location: index.php");
     } else {
         echo("<script>alert('auth failed')</script>");
-        header("Location: loginpage.php");
+        header("Location: loginpage.html");
     }
     exit();
 } elseif ($action === 'login') {
@@ -31,7 +31,7 @@ if ($action === 'signup') {
         header("Location: index.php");
     } else {
         echo("<script>alert('auth failed')</script>");
-        header("Location: loginpage.php");
+        header("Location: loginpage.html");
     }
     exit();
 }

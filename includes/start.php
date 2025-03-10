@@ -3,7 +3,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
 // Démarrer la session
 session_start();
 
@@ -13,6 +12,10 @@ require_once 'includes/db.php';
 
 // Définir le titre par défaut du site
 $pageTitle = $pageTitle ?? "ImmoAgence - Votre spécialiste immobilier";
+
+// Vérifier si l'utilisateur est connecté
+$isLoggedIn = isset($_SESSION['user']);
+$user = $isLoggedIn ? $_SESSION['user'] : null;
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -46,6 +49,23 @@ $pageTitle = $pageTitle ?? "ImmoAgence - Votre spécialiste immobilier";
                     <li class="nav-item">
                         <a class="nav-link" href="add-property.php">Déposer une annonce</a>
                     </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <?php if ($isLoggedIn): ?>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                <?php echo htmlspecialchars($user['username']); ?>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="profile.php">Mon Profil</a></li>
+                                <li><a class="dropdown-item" href="logout.php">Se déconnecter</a></li>
+                            </ul>
+                        </li>
+                    <?php else: ?>
+                        <li class="nav-item">
+                            <a class="btn btn-light" href="loginpage.html">Se connecter</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>

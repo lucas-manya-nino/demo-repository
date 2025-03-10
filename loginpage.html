@@ -25,22 +25,20 @@
     <div class="blur-bg-overlay"></div>
     <div class="form-popup">
         <span class="close-btn material-symbols-rounded">close</span>
+        
+        <!-- Login Form -->
         <div class="form-box login">
-            <div class="form-details">
-            </div>
+            <div class="form-details"></div>
             <div class="form-content">
                 <h2>LOGIN</h2>
-                <form action="#">
+                <form action="auth.php" method="POST">
+                    <input type="hidden" name="action" value="login">
                     <div class="input-field">
-                        <input type="text" required>
-                        <label>Email</label>
+                        <input type="text" name="username" required>
+                        <label>Username</label>
                     </div>
                     <div class="input-field">
-                        <input type="tel" id="mobile-number" required>
-                        <label>Mobile Number</label>
-                    </div>
-                    <div class="input-field">
-                        <input type="password" required>
+                        <input type="password" name="password" required>
                         <label>Password</label>
                     </div>
                     <button type="submit">Log In</button>
@@ -51,28 +49,34 @@
                 </div>
             </div>
         </div>
+
+        <!-- Signup Form -->
         <div class="form-box signup">
-            <div class="form-details">
-            </div>
+            <div class="form-details"></div>
             <div class="form-content">
                 <h2>SIGNUP</h2>
-                <form action="#">
+                <form action="auth.php" method="POST">
+                    <input type="hidden" name="action" value="signup">
                     <div class="input-field">
-                        <input type="text" required>
+                        <input type="text" name="username" required>
+                        <label>Username</label>
+                    </div>
+                    <div class="input-field">
+                        <input type="email" name="email" required>
                         <label>Enter your email</label>
                     </div>
                     <div class="input-field">
-                        <input type="number" required>
+                        <input type="tel" name="phone" required>
                         <label>Enter your mobile number</label>
                     </div>
                     <div class="input-field">
-                        <input type="password" required>
+                        <input type="password" name="password" required>
                         <label>Create password</label>
                     </div>
                     <div class="policy-text">
-                        <input type="checkbox" id="policy">
+                        <input type="checkbox" id="policy" required>
                         <label for="policy">
-                            I agree the
+                            I agree to the
                             <a href="#" class="option">Terms & Conditions</a>
                         </label>
                     </div>
