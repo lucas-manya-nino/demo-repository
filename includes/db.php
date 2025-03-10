@@ -272,16 +272,20 @@ function filterProperties($filters) {
  * @return array|false Tableau des informations de l'utilisateur si correct, false sinon
  */
 function verifyUserCredentials($username, $password) {
+    $conn = getDbConnection(); // Connexion à la BD
+
     // Hacher le mot de passe fourni
     $hashedPassword = hash('sha256', $password);
 
     // Requête SQL pour vérifier les informations de connexion
     $sql = "SELECT * FROM clients WHERE username = ? AND password = ?";
-    $result = executeQuery($sql, [$username, $hashedPassword]);
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $username, $hashedPassword);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($row = $result->fetch_assoc()) {
-        // Retirer le mot de passe du tableau des résultats pour des raisons de sécurité
-        unset($row['password']);
+        unset($row['password']); // Retirer le mot de passe du tableau des résultats
         return $row;
     }
 
@@ -295,9 +299,14 @@ function verifyUserCredentials($username, $password) {
  * @return bool True si le nom d'utilisateur est disponible, False sinon
  */
 function verifyUsernameAvailable($username) {
+    $conn = getDbConnection(); // Connexion à la BD
+
     // Requête SQL pour vérifier si le nom d'utilisateur existe déjà
     $sql = "SELECT COUNT(*) as count FROM clients WHERE username = ?";
-    $result = executeQuery($sql, [$username]);
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($row = $result->fetch_assoc()) {
         return $row['count'] == 0;
@@ -313,14 +322,18 @@ function verifyUsernameAvailable($username) {
  * @return bool True si l'adresse email est valide et disponible, False sinon
  */
 function verifyEmailAvailable($email) {
-    // Vérifier si l'email est valide
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return false;
     }
 
+    $conn = getDbConnection(); // Connexion à la BD
+
     // Requête SQL pour vérifier si l'adresse email existe déjà
     $sql = "SELECT COUNT(*) as count FROM clients WHERE email = ?";
-    $result = executeQuery($sql, [$email]);
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($row = $result->fetch_assoc()) {
         return $row['count'] == 0;
@@ -336,17 +349,20 @@ function verifyEmailAvailable($email) {
  * @return bool True si le numéro est valide et disponible, False sinon
  */
 function verifyPhoneNumAvailable($phoneNum) {
-    // Nettoyage du numéro (suppression des espaces, tirets, parenthèses)
     $phoneNum = preg_replace('/[\s\-\(\)]/', '', $phoneNum);
 
-    // Vérification du format du numéro (ex: +33 612345678 ou 0612345678)
     if (!preg_match('/^(\+?\d{1,3})?\d{9,12}$/', $phoneNum)) {
         return false;
     }
 
+    $conn = getDbConnection(); // Connexion à la BD
+
     // Requête SQL pour vérifier si le numéro existe déjà
     $sql = "SELECT COUNT(*) as count FROM clients WHERE phone_num = ?";
-    $result = executeQuery($sql, [$phoneNum]);
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $phoneNum);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($row = $result->fetch_assoc()) {
         return $row['count'] == 0;
@@ -362,56 +378,34 @@ function verifyPhoneNumAvailable($phoneNum) {
  * @return int|false ID du nouveau client ou false en cas d'échec
  */
 function registerNewClient($clientData) {
-    // Vérifier si le nom d'utilisateur est disponible
-    if (!verifyUsernameAvailable($clientData['username'])) {
+    $conn = getDbConnection(); // Connexion à la BD
+
+    if (!verifyUsernameAvailable($clientData['username']) ||
+        !verifyEmailAvailable($clientData['email']) ||
+        !verifyPhoneNumAvailable($clientData['phone_num'])) {
         return false;
     }
 
-    // Vérifier si l'adresse email est disponible
-    if (!verifyEmailAvailable($clientData['email'])) {
-        return false;
-    }
-
-    // Vérifier si le numéro de téléphone est disponible
-    if (!verifyPhoneNumAvailable($clientData['phone_num'])) {
-        return false;
-    }
-
-    // Hacher le mot de passe
     $clientData['password'] = hash('sha256', $clientData['password']);
-
-    // Ajouter la date d'enregistrement
     $clientData['registration_date'] = date('Y-m-d');
 
-    // Créer la requête SQL d'insertion
     $columns = implode(', ', array_keys($clientData));
     $placeholders = implode(', ', array_fill(0, count($clientData), '?'));
-
     $sql = "INSERT INTO clients ($columns) VALUES ($placeholders)";
 
-    $conn = getDbConnection();
     $stmt = $conn->prepare($sql);
 
     if (!$stmt) {
         die('Erreur de préparation de la requête: ' . $conn->error);
     }
 
-    // Construire les types de paramètres
     $types = '';
     foreach ($clientData as $param) {
-        if (is_int($param)) {
-            $types .= 'i';
-        } elseif (is_float($param)) {
-            $types .= 'd';
-        } else {
-            $types .= 's';
-        }
+        $types .= is_int($param) ? 'i' : (is_float($param) ? 'd' : 's');
     }
 
-    // Lier les paramètres
     $stmt->bind_param($types, ...array_values($clientData));
 
-    // Exécuter la requête
     if ($stmt->execute()) {
         return $conn->insert_id;
     }
@@ -427,16 +421,11 @@ function registerNewClient($clientData) {
  * @return bool True si la connexion est réussie, False sinon
  */
 function loginUser($username, $password) {
-    // Vérifier les informations de connexion de l'utilisateur
     $user = verifyUserCredentials($username, $password);
 
     if ($user) {
-        // Démarrer une session
         session_start();
-
-        // Stocker les informations de l'utilisateur dans la session
         $_SESSION['user'] = $user;
-
         return true;
     }
 
@@ -448,10 +437,6 @@ function loginUser($username, $password) {
  */
 function logoutUser() {
     session_start();
-    
-    // Supprimer toutes les variables de session
     $_SESSION = [];
-
-    // Détruire la session
     session_destroy();
 }

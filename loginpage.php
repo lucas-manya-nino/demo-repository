@@ -73,11 +73,6 @@
             usernameInput.style.display = isSignUp ? 'block' : 'none';
             document.getElementById('form-action').value = isSignUp ? 'signup' : 'login';
         });
-
-        authForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert(isSignUp ? 'Sign up successful!' : 'Login successful!');
-        });
     </script>
 </body>
 </html>
