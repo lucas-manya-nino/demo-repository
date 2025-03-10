@@ -440,3 +440,69 @@ function logoutUser() {
     $_SESSION = [];
     session_destroy();
 }
+
+function addToFavorites($clientId, $propertyId) {
+    $conn = getDbConnection();
+    
+    // Vérifier si le favori existe déjà
+    $sql = "INSERT INTO favorites (fk_id_client, fk_id_property) 
+            VALUES (?, ?) 
+            ON CONFLICT (fk_id_client, fk_id_property) DO NOTHING";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $clientId, $propertyId);
+    
+    return $stmt->execute();
+}
+
+function removeFromFavorites($clientId, $propertyId) {
+    $conn = getDbConnection();
+    
+    $sql = "DELETE FROM favorites WHERE fk_id_client = ? AND fk_id_property = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $clientId, $propertyId);
+    
+    return $stmt->execute();
+}
+
+function isFavorite($clientId, $propertyId) {
+    $conn = getDbConnection();
+    
+    $sql = "SELECT COUNT(*) as count FROM favorites WHERE fk_id_client = ? AND fk_id_property = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $clientId, $propertyId);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+    
+    return $result['count'] > 0;
+}
+
+function getUserFavorites($clientId) {
+        // Obtenez la connexion à la base de données
+        $conn = getDbConnection(); // Assurez-vous que cette fonction retourne la connexion MySQLi
+    
+        // Préparez la requête SQL pour récupérer les propriétés favorites
+        $query = "
+            SELECT properties.* 
+            FROM properties 
+            JOIN favorites ON properties.id = favorites.fk_id_property 
+            WHERE favorites.fk_id_client = ?";
+        
+        // Préparez la requête
+        $stmt = $conn->prepare($query);
+        
+        // Lier le paramètre clientId à la requête préparée
+        $stmt->bind_param('i', $clientId); // 'i' signifie integer
+    
+        // Exécuter la requête
+        $stmt->execute();
+    
+        // Récupérer le résultat
+        $result = $stmt->get_result();
+    
+        // Renvoyer les résultats sous forme de tableau associatif
+        $favorites = $result->fetch_all(MYSQLI_ASSOC);
+    
+        // Retourner les propriétés favorites
+        return $favorites;
+}
