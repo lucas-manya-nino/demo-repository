@@ -43,12 +43,14 @@
 <body>
     <div class="container">
         <h2 id="form-title">Login</h2>
-        <form id="auth-form">
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <input type="text" id="username" placeholder="Username" style="display: none;">
+        <form id="auth-form" method="POST" action="auth.php">
+            <input type="email" name="email" id="email" placeholder="Email" required>
+            <input type="password" name="password" id="password" placeholder="Password" required>
+            <input type="text" name="username" id="username" placeholder="Username" style="display: none;">
+            <input type="hidden" name="action" id="form-action" value="login">
             <button type="submit">Submit</button>
         </form>
+
         <p>
             <span id="toggle-text">Don't have an account?</span> 
             <span class="toggle-link" id="toggle-form">Sign up</span>
@@ -69,6 +71,7 @@
             toggleText.innerText = isSignUp ? 'Already have an account?' : "Don't have an account?";
             toggleForm.innerText = isSignUp ? 'Login' : 'Sign up';
             usernameInput.style.display = isSignUp ? 'block' : 'none';
+            document.getElementById('form-action').value = isSignUp ? 'signup' : 'login';
         });
 
         authForm.addEventListener('submit', (e) => {

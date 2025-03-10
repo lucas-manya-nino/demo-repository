@@ -307,12 +307,17 @@ function verifyUsernameAvailable($username) {
 }
 
 /**
- * Vérifie si une adresse email est disponible
+ * Vérifie si une adresse email est valide et disponible
  *
  * @param string $email Adresse email à vérifier
- * @return bool True si l'adresse email est disponible, False sinon
+ * @return bool True si l'adresse email est valide et disponible, False sinon
  */
 function verifyEmailAvailable($email) {
+    // Vérifier si l'email est valide
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return false;
+    }
+
     // Requête SQL pour vérifier si l'adresse email existe déjà
     $sql = "SELECT COUNT(*) as count FROM clients WHERE email = ?";
     $result = executeQuery($sql, [$email]);
@@ -325,13 +330,21 @@ function verifyEmailAvailable($email) {
 }
 
 /**
- * Vérifie si un numéro de téléphone est disponible
+ * Vérifie si un numéro de téléphone est valide et disponible
  *
  * @param string $phoneNum Numéro de téléphone à vérifier
- * @return bool True si le numéro de téléphone est disponible, False sinon
+ * @return bool True si le numéro est valide et disponible, False sinon
  */
 function verifyPhoneNumAvailable($phoneNum) {
-    // Requête SQL pour vérifier si le numéro de téléphone existe déjà
+    // Nettoyage du numéro (suppression des espaces, tirets, parenthèses)
+    $phoneNum = preg_replace('/[\s\-\(\)]/', '', $phoneNum);
+
+    // Vérification du format du numéro (ex: +33 612345678 ou 0612345678)
+    if (!preg_match('/^(\+?\d{1,3})?\d{9,12}$/', $phoneNum)) {
+        return false;
+    }
+
+    // Requête SQL pour vérifier si le numéro existe déjà
     $sql = "SELECT COUNT(*) as count FROM clients WHERE phone_num = ?";
     $result = executeQuery($sql, [$phoneNum]);
 
