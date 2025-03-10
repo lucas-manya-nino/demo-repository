@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css?family=Exo+2:700');
+* {
+  margin: 0 auto;
+  padding: 0;
+}
+
+body {
+  background: url("images/aboutus-img.jpg");
+  background-color: #212121;
+  background-blend-mode: overlay;
+  background-position: center;
+  background-size: cover;
+  text-align: center;
+}
+
+h1 {
+  color: white;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 46px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+p {
+  max-width: 700px;
+  min-height: 200px;
+  padding: 0;
+  color: white;
+  font-family: OpenSans;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 22px;
+}
+
+.square {
+  height: 60px;
+  width: 60px;
+  border: 1px dashed white;
+  margin: 0 0 0 55px;
+  /*   padding: 1px; resize squares */
+  background-color: rgba(255, 255, 255, 0.2);
+  display: inline-block;
+  transform: rotateZ(44deg);
+}
+
+.square:hover {
+  background-color: rgba(27, 182, 239, 0.2);
+  transition: ease 0.2s;
+  cursor: pointer;
+}
+
+.square .icons {
+  position: absolute;
+  transform: rotateZ(-44deg);
+  margin: 20px 0 0px 21px;
+}
+
+.fa-facebook,
+.fa-twitter,
+.fa-youtube {
+  width: 30px; 
+  height: 30px; 
+  color: white;
+  font-family: 'Font Awesome 5 Free'; 
+  font-weight: 900; 
+  font-size: 23px;
+  text-transform: uppercase;
+}
+
+.square:hover .fa-facebook {
+  color: rgba(59, 89, 152, 1)
+}
+
+.square:hover .fa-twitter {
+  color: rgba(27, 182, 239, 1)
+}
+
+.square:hover .fa-youtube {
+  color: rgba(229, 45, 39, 1)
+}
