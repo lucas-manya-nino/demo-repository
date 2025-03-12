@@ -1,9 +1,8 @@
 <?php
 include 'includes/start.php';
-// Définir le titre de la page
+
 $pageTitle = "ImmoAgence - Toutes nos propriétés";
 
-// Traiter les filtres
 $filters = [
     'type' => $_GET['type'] ?? '',
     'price_min' => $_GET['price_min'] ?? '',
@@ -12,17 +11,11 @@ $filters = [
     'city' => $_GET['city'] ?? ''
 ];
 
-// Récupérer les propriétés filtrées
 $properties = filterProperties($filters);
-
-// Inclure l'en-tête
-
 ?>
 
     <div id="properties-app">
         <h1 class="mb-4">Rechercher une propriété</h1>
-
-        <!-- Formulaire de filtrage -->
         <div class="filter-form mb-4">
             <form id="filter-form" method="GET" action="properties.php">
                 <div class="row">
@@ -63,12 +56,10 @@ $properties = filterProperties($filters);
             </form>
         </div>
 
-        <!-- Résultats de recherche -->
         <div class="mb-3">
             <h2><?php echo count($properties); ?> résultat(s) trouvé(s)</h2>
         </div>
 
-        <!-- Liste des propriétés -->
         <div class="row">
             <?php if (empty($properties)): ?>
                 <div class="col-12">
@@ -103,7 +94,7 @@ $properties = filterProperties($filters);
     </div>
 
     <script>
-        // Initialiser les valeurs des filtres à partir de l'URL
+
         document.addEventListener('DOMContentLoaded', function() {
             if (document.getElementById('properties-app')) {
                 const app = new Vue({
@@ -130,7 +121,10 @@ $properties = filterProperties($filters);
                                 bedrooms: '',
                                 city: ''
                             };
-                            document.getElementById('filter-form').submit();
+
+                            this.$nextTick(() => {
+                                document.getElementById('filter-form').submit();
+                            });
                         }
                     }
                 });
@@ -139,6 +133,5 @@ $properties = filterProperties($filters);
     </script>
 
 <?php
-// Inclure le pied de page
 include 'includes/end.php';
 ?>

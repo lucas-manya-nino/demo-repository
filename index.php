@@ -1,35 +1,30 @@
 <?php
-// Définir le titre de la page
 $pageTitle = "ImmoAgence - Votre spécialiste immobilier";
 
-
-
-// Inclure l'en-tête
 include 'includes/start.php';
 
-// Récupérer les propriétés récentes (3 dernières)
 $recentProperties = getRecentProperties(3);
 
 ?>
 
     <div id="home-app">
-        <!-- Section Hero -->
-        <section class="hero-section">
+        <section class="hero-section py-5 bg-light">
             <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h1>Trouvez votre bien immobilier idéal</h1>
-                        <p class="lead">Des milliers d'annonces de vente et de location disponibles partout en France.</p>
-                        <a href="properties.php" class="btn btn-light btn-lg mt-3">Consulter nos annonces</a>
+                <div class="row align-items-center g-5">
+                    <div class="col-md-7">
+                        <h1 class="display-4 fw-bold mb-3 text-dark">Trouvez votre bien immobilier idéal</h1>
+                        <p class="lead text-muted mb-4">Explorez des milliers d'annonces de vente et de location disponibles partout en France.</p>
+                        <a href="properties.php" class="btn btn-primary btn-lg px-4 py-2">Consulter nos annonces</a>
                     </div>
-                    <div class="col-md-4 d-none d-md-block">
-                        <img src="assets/images/house-illustration.png" alt="Maison" class="img-fluid">
+                    <div class="col-md-5">
+                        <div class="position-relative">
+                            <img src="images/house-illustration.jpg" alt="Maison" class="img-fluid rounded-3 shadow-lg">
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Section Propriétés récentes -->
         <section class="mt-5">
             <div class="container">
                 <h2 class="mb-4">Propriétés récentes</h2>
@@ -62,7 +57,6 @@ $recentProperties = getRecentProperties(3);
             </div>
         </section>
 
-        <!-- Section Avantages -->
         <section class="mt-5">
             <div class="container">
                 <h2 class="text-center mb-4">Pourquoi choisir ImmoAgence ?</h2>
@@ -94,6 +88,5 @@ $recentProperties = getRecentProperties(3);
     </div>
 
 <?php
-// Inclure le pied de page
 include 'includes/end.php';
 ?>

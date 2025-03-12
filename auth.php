@@ -10,7 +10,7 @@ $action = $_POST['action'] ?? '';
 $email = $_POST['email'] ?? '';
 $password = $_POST['password'] ?? '';
 $username = $_POST['username'] ?? '';
-$phone = $_POST['phone_num'] ?? '06-06-06-06-06';
+$phone = $_POST['phone'] ?? '0123456789';
 
 if ($action === 'signup') {
     $userInfos = array(

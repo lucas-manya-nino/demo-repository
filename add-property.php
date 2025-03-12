@@ -1,10 +1,8 @@
 <?php
-// Définir le titre de la page
 $pageTitle = "ImmoAgence - Déposer une annonce";
 
 include 'includes/start.php';
 
-// Variables pour le formulaire
 $errors = [];
 $success = false;
 $property = [
@@ -21,9 +19,7 @@ $property = [
     'features' => []
 ];
 
-// Traiter le formulaire soumis
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Récupérer les données du formulaire
     $property = [
         'title' => $_POST['title'] ?? '',
         'description' => $_POST['description'] ?? '',
@@ -38,21 +34,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'features' => isset($_POST['features']) ? json_decode($_POST['features'], true) : []
     ];
 
-    // Gérer l'upload d'image
-    $imageName = 'default-property.jpg'; // Image par défaut
+    $imageName = 'default-property.jpg';
 
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
         $allowed = ['jpg', 'jpeg', 'png', 'gif'];
         $filename = $_FILES['image']['name'];
         $fileExt = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
-        // Vérifier l'extension
         if (in_array($fileExt, $allowed)) {
-            // Générer un nom de fichier unique
             $newName = uniqid() . '.' . $fileExt;
-            $uploadPath = 'assets/images/' . $newName;
+            $uploadPath = 'images/' . $newName;
 
-            // Déplacer le fichier
             if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadPath)) {
                 $imageName = $newName;
             }
@@ -63,16 +55,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $property['image'] = $imageName;
 
-    // Valider les données
     $errors = validatePropertyData($property);
 
-    // Si pas d'erreurs, ajouter la propriété
     if (empty($errors)) {
         $propertyId = addProperty($property);
 
         if ($propertyId) {
             $success = true;
-            // Réinitialiser le formulaire après l'ajout réussi
             $property = [
                 'title' => '',
                 'description' => '',
@@ -91,8 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
-
-// Inclure l'en-tête
 
 ?>
 
@@ -114,11 +101,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <div class="card">
             <div class="card-header">
-                <h2>Informations sur le bien</h2>
+                <h3 class="mt-2 mb-2">Informations sur le bien</h3>
             </div>
             <div class="card-body">
                 <form class="add-property-form" method="POST" action="add-property.php" enctype="multipart/form-data" @submit="validateForm">
-                    <!-- Informations de base -->
                     <div class="mb-4">
                         <h4>Informations générales</h4>
 
@@ -160,7 +146,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                     </div>
 
-                    <!-- Caractéristiques du bien -->
                     <div class="mb-4">
                         <h4>Caractéristiques du bien</h4>
 
@@ -209,7 +194,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                     </div>
 
-                    <!-- Adresse -->
                     <div class="mb-4">
                         <h4>Adresse</h4>
 
@@ -236,7 +220,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                     </div>
 
-                    <!-- Caractéristiques supplémentaires -->
                     <div class="mb-4">
                         <h4>Caractéristiques supplémentaires</h4>
 
@@ -272,7 +255,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                     </div>
 
-                    <!-- Image -->
                     <div class="mb-4">
                         <h4>Image</h4>
 
@@ -288,7 +270,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                     </div>
 
-                    <!-- Bouton de soumission -->
                     <div class="text-end">
                         <button type="submit" class="btn btn-primary btn-lg" :disabled="isSubmitting">
                         <span v-if="isSubmitting">
@@ -351,7 +332,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         },
                         validateForm() {
                             this.isSubmitting = true;
-                            // La validation côté serveur prendra le relais
                             return true;
                         }
                     }
@@ -361,6 +341,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </script>
 
 <?php
-// Inclure le pied de page
 include 'includes/end.php';
 ?>
