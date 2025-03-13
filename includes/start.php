@@ -54,7 +54,7 @@ $user = $isLoggedIn ? $_SESSION['user'] : null;
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
                                 <?php echo htmlspecialchars($user['username']); ?>
                             </a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                 <li><a class="dropdown-item" href="profile.php">Mon Profil</a></li>
                                 <li><a class="dropdown-item" href="logout.php">Se déconnecter</a></li>
                             </ul>
@@ -69,7 +69,7 @@ $user = $isLoggedIn ? $_SESSION['user'] : null;
         </div>
     </nav>
 </header>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <?php include("loginpage.html"); ?>
 
 <div class="container mt-4">
